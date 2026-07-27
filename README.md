@@ -105,13 +105,15 @@ services:
 #### 📱 Bark（iOS 推送）
 
 1. 在手机上安装 [Bark](https://apps.apple.com/app/bark-customed-notifications/id1403753865)
-2. 打开 App 首页，复制你的 **设备码（Device Key）**
-3. 在 NotifyCenter 中添加 Bark 渠道，粘贴设备码
+2. 打开 App 首页，**复制服务器上方显示的完整推送 URL**（形如 `https://api.day.app/xxxxxxxxxxxx`）
+3. 在 NotifyCenter 中添加 Bark 渠道，把这个 URL 粘贴到 **API URL** 字段即可，系统会自动解析出服务器地址和设备 Key
 4. 可选：
    - **推送级别**：`active`（响铃）/ `timeSensitive`（勿扰模式也响）/ `passive`（不亮屏）
-   - **服务器地址**：默认 `https://api.day.app`，也支持自建服务器
+   - **高级设置**：如果使用自建 Bark 服务器，可展开"🔧 高级设置"分开填写服务器地址和设备 Key
    - **角标数字**、**分组**、**加密**、**自动复制**、**归档** 等
 5. 消息中的 `imgURL` 会作为图标，`linkURL` 作为点击跳转链接
+
+> 💡 说明：Bark App 显示的完整 URL 里包含一个专用 Key（不同于普通的 Device Token），只有使用这个完整 URL 才能成功推送。这也是 NotifyCenter 简化为"直接粘贴 URL"的原因。
 
 #### 💬 Telegram
 
