@@ -3,13 +3,22 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。适合个人自动化、Homelab、Emby/Jellyfin 媒体通知、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.56-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.57-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.57 更新亮点
+
+- 🕒 日志保留天数控制（推送日志 / 后端日志各自独立，支持 7天/30天/永久）
+- 🗑️ 一键清空推送日志 / 后端日志
+- 🧹 每日凌晨自动清理超期日志
+- 🐛 修复 Bark 渠道图标不生效
+- 🐛 修复保留天数切换取消后仍触发清理
+- 🎨 搜索框宽度优化，工具栏布局更紧凑
 
 ## ✨ v0.56 更新亮点
 
@@ -71,7 +80,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.56
+  ttt216/notifycenter:0.57
 ```
 
 ### 使用 Docker Compose
@@ -81,7 +90,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.56
+    image: ttt216/notifycenter:0.57
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -387,7 +396,15 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.56（当前版本）
+### v0.57（当前版本）
+- 🕒 日志保留天数控制（推送日志 / 后端日志各自独立，支持 7天/30天/永久）
+- 🗑️ 一键清空推送日志 / 后端日志
+- 🧹 每日凌晨自动清理超期日志
+- 🐛 修复 Bark 渠道图标不生效
+- 🐛 修复保留天数切换取消后仍触发清理
+- 🎨 搜索框宽度优化，工具栏布局更紧凑
+
+### v0.56
 - 🎨 新增网站图标（favicon）：铃铛 + 信号波设计，浏览器标签栏可显示 Logo
 
 ### v0.55
