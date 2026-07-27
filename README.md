@@ -3,7 +3,7 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。适合个人自动化、Homelab、Emby/Jellyfin 媒体通知、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.52-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.54-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
@@ -11,33 +11,13 @@
 
 ---
 
-## ✨ v0.52 更新亮点
+## ✨ v0.54 更新亮点
 
-本次更新聚焦在**用户体验**和**功能完整性**上：
-
-### 🎬 Emby 剧照/海报自动生成
-- 播放通知消息可以直接**显示影片海报、剧照、Logo 和单集画面**
-- 新增五个 Emby 模板变量：`CoverImgUrl` / `PrimaryImgUrl` / `BackdropImgUrl` / `LogoImgUrl` / `EpisodeImgUrl`
-- 智能识别电影和剧集，自动使用最合适的图片（例如剧集单集自动获取该集的横版画面）
-- 只需在 Emby 模板配置里填写你的 **Emby 服务器地址**，图片链接就会自动生成
-
-### 🔔 三种新推送渠道
-- **企业微信（应用消息）**：通过企业自建应用推送到员工的企业微信 App
-- **企业微信（群机器人）**：更简单的方式，只需一个 Webhook Key，无需配置可信 IP
-- **PushDeer**：开源自建友好的推送服务，支持官方或自建服务器
-
-### 🔐 更贴心的密码修改流程
-- 修改密码后不再突兀跳转，会显示明确的提示页 + 倒计时
-- **登录成功后自动跳回你之前的页面**，不再需要重新导航
-
-### 🎨 全新使用文档
-- README 里每个渠道的配置步骤都有详细图文说明
-- 补充 Bark 推送级别、Telegram Bot 创建、Mattermost 图片显示技巧、Webhook 对接示例等
-
-### 📝 术语更清晰
-- 全面统一 UI 文案中的"通道"→"路由"，避免与"渠道"混淆
-  - **渠道（Channel）**：Bark、Telegram 等具体推送目标
-  - **路由（Route）**：把消息分发到多个渠道的转发规则
+- 🌐 **企业微信 API 代理**：支持通过代理服务器调用企业微信 API，解决动态 IP 用户无法配置"可信 IP"的问题
+- 📩 **企业微信接收消息回调**：内置回调地址，支持签名校验、AES 解密及消息转发
+- 🎯 **渠道配置简化**：Bark、Mattermost、企业微信群机器人 支持直接粘贴完整 URL
+- 🛡️ **API 保底解析**：接收非 JSON 请求体时自动作为纯文本消息处理
+- 🐛 **多项 Bug 修复**：空列表显示、删除渠道后自动刷新、回调 URL 显示等
 
 ---
 
@@ -82,7 +62,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.52
+  ttt216/notifycenter:0.54
 ```
 
 ### 使用 Docker Compose
@@ -92,7 +72,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.52
+    image: ttt216/notifycenter:0.54
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -396,7 +376,18 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.52（当前版本）
+### v0.54（当前版本）
+- 🌐 企业微信 API 代理支持
+- 📩 企业微信接收消息回调（签名校验、AES 解密、消息转发）
+- 🎯 Bark / Mattermost / 企业微信群机器人 支持直接粘贴完整 URL
+- 🛡️ API 支持接收非 JSON 请求体
+- 🐛 修复多项列表和 UI 相关的 Bug
+
+### v0.53
+- 🐛 修复删除渠道后列表未自动刷新的问题
+- 🎯 企业微信应用消息渠道编辑页新增回调 URL 一键复制按钮
+
+### v0.52
 - 🎨 **界面术语统一**：所有 UI 文案中的"通道"改为"路由"，避免与"渠道（Channel）"混淆
 - 🔐 **密码修改体验优化**：修改成功后显示提示页 + 倒计时，登录后自动跳回原页面
 - 📖 **使用文档大幅完善**：Bark、Telegram、Mattermost、Webhook 配置步骤全面补齐，附典型示例
