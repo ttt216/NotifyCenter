@@ -3,13 +3,18 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。适合个人自动化、Homelab、Emby/Jellyfin 媒体通知、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.55-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.56-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.56 更新亮点
+
+- 🎨 新增网站图标（favicon）：铃铛 + 信号波设计，紫蓝色渐变背景
+- 📱 支持浏览器标签栏、书签、移动端"添加到主屏幕"显示项目 Logo
 
 ## ✨ v0.55 更新亮点
 
@@ -66,7 +71,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.55
+  ttt216/notifycenter:0.56
 ```
 
 ### 使用 Docker Compose
@@ -76,7 +81,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.55
+    image: ttt216/notifycenter:0.56
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -382,7 +387,10 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.55（当前版本）
+### v0.56（当前版本）
+- 🎨 新增网站图标（favicon）：铃铛 + 信号波设计，浏览器标签栏可显示 Logo
+
+### v0.55
 - 🐛 修复弹窗内文本框选中文字后松开鼠标误关闭弹窗的问题
 
 ### v0.54
