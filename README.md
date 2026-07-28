@@ -3,13 +3,18 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。适合个人自动化、Homelab、Emby/Jellyfin 媒体通知、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.57-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.58-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.58 更新亮点
+
+- 🧹 清理冗余代码，精简项目结构
+- 🐛 修复通用模板的变量显示错误
 
 ## ✨ v0.57 更新亮点
 
@@ -80,7 +85,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.57
+  ttt216/notifycenter:0.58
 ```
 
 ### 使用 Docker Compose
@@ -90,7 +95,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.57
+    image: ttt216/notifycenter:0.58
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -396,7 +401,11 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.57（当前版本）
+### v0.58（当前版本）
+- 🧹 清理冗余代码，精简项目结构
+- 🐛 修复通用模板的变量显示错误
+
+### v0.57
 - 🕒 日志保留天数控制（推送日志 / 后端日志各自独立，支持 7天/30天/永久）
 - 🗑️ 一键清空推送日志 / 后端日志
 - 🧹 每日凌晨自动清理超期日志
