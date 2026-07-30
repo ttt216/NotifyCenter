@@ -3,13 +3,26 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。适合个人自动化、Homelab、Emby/Jellyfin 媒体通知、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.58-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.60-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.60 更新亮点
+
+- 🔀 **一个 API Key 支持绑定多个路由**：每个路由独立使用自己的模板发送到自己的渠道集合，让 Markdown 渠道、纯文本渠道、企业微信 markdown 等各得其所
+- 📋 推送日志按路由分组展示：每个路由的渲染标题/内容、以及各渠道的成功失败一目了然
+- 🛡️ 删除保护与提示：
+  - 删除模板前检查引用，被路由使用时拒绝删除并列出占用路由
+  - 删除渠道前提示会影响哪些路由
+  - 删除路由前提示归属的 API Key
+  - 删除 API Key 前提示会释放的路由列表
+- 🔄 抢占式路由转移：APIKey 保存时若勾选了已被别的 APIKey 占用的路由，会弹窗让你确认"转移"
+- 🧭 路由列表新增"归属 APIKey"列，一眼看清路由被谁占用
+- 🗃️ 平滑数据迁移：老的 `apikeys.route_id` 会自动反填到 `routes.api_key_id`，无需手动处理
 
 ## ✨ v0.58 更新亮点
 
@@ -85,7 +98,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.58
+  ttt216/notifycenter:0.60
 ```
 
 ### 使用 Docker Compose
@@ -95,7 +108,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.58
+    image: ttt216/notifycenter:0.60
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -401,7 +414,15 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.58（当前版本）
+### v0.60（当前版本）
+- 🔀 一个 API Key 支持绑定多个路由：每路由独立模板 + 独立渠道集合
+- 📋 推送日志按路由分组展示，每路由的渲染结果与渠道结果一目了然
+- 🛡️ 删除模板/渠道/路由/APIKey 前引用检查与提示
+- 🔄 抢占式路由转移：勾选归属他人的路由需二次确认
+- 🧭 路由列表新增「归属 APIKey」列
+- 🗃️ 自动迁移老的 `apikeys.route_id` 到 `routes.api_key_id`
+
+### v0.58
 - 🧹 清理冗余代码，精简项目结构
 - 🐛 修复通用模板的变量显示错误
 
