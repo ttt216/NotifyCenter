@@ -1,15 +1,30 @@
 # 📬 NotifyCenter - 多渠道通知中心
 
-**一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。适合个人自动化、Homelab、Emby/Jellyfin 媒体通知、监控告警等场景。
+**一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。支持 JSON、表单、multipart、纯文本等多种请求体格式，原生兼容 Emby、群晖 DSM、Grafana、Uptime Kuma 等主流 Webhook 来源。适合个人自动化、Homelab、NAS 通知、媒体服务器、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.60-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.62-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.62 更新亮点
+
+- 📮 **全面支持多种请求体格式**：根据 Content-Type 自动识别并解析 `application/json`、`application/x-www-form-urlencoded`、`multipart/form-data`、`text/plain`，覆盖 Emby、Grafana 等各种 Webhook 来源
+- 🖼️ **正式入口支持 multipart/form-data**：带截图/附件的通知也能正常解析（如 Emby 媒体通知）
+- 📄 无 Content-Type 或未知类型时智能兜底：先尝试 JSON，再尝试表单，最后作为纯文本
+- 🔔 标题缺失时统一兜底为 `Notification`，不再出现 `{{ title }}` 原样字符串
+
+## ✨ v0.61 更新亮点
+
+- 🧩 **通用模板字段自动归一化**：`text` / `message` / `msg` / `body` / `description` 会自动映射到 `content`，`subject` / `headline` 映射到 `title`，不同来源的 payload 都能命中同一套模板
+- 🔍 **未匹配变量保留原样**：模板里 `{{ foo }}` 找不到数据时会保留成字符串本身，方便一眼看出哪些字段没传（Emby 模板同样适用）
+- 📝 **渲染兜底更友好**：渲染失败时优先取 payload 的 content/text/message；都没有则输出标准 JSON 字符串
+- ✅ **修复新建 API Key 失败**：升级到 v0.60 时因老数据库遗留字段导致新建 API Key 报错的问题
+- 🔔 **删除 / 清空操作有真实弹窗**：使用页面内自定义确认框，各类嵌入式浏览器也能正常拦截取消
 
 ## ✨ v0.60 更新亮点
 
@@ -64,12 +79,13 @@
 | 🚀 **一键部署** | 单个 Docker 镜像，SQLite 内嵌，无需外部数据库 |
 | 📡 **7 种渠道** | Bark、Telegram、Mattermost、企业微信 x2、PushDeer、自定义 Webhook |
 | 🎬 **Emby 支持** | 播放/入库事件智能识别，自动生成海报剧照 URL |
-| 📝 **模板系统** | Pongo2/Jinja2 语法，支持变量、条件、循环 |
-| 🔀 **路由规则** | 一次 API 调用同时推送到多个渠道 |
-| 🔑 **API Key 认证** | 每个路由独立 API Key，安全隔离 |
+| 📮 **多格式请求体** | 自动识别 JSON / 表单（`x-www-form-urlencoded`）/ multipart / 纯文本 |
+| 📝 **模板系统** | Pongo2/Jinja2 语法，支持变量、条件、循环；未匹配变量保留原名，调试一目了然 |
+| 🔀 **路由规则** | 一次 API 调用同时推送到多个渠道，一个 API Key 可绑定多条路由，每路由独立模板与渠道集合 |
+| 🔑 **API Key 认证** | 路由级 API Key 安全隔离，支持一键禁用、有效期、调用统计 |
 | 📊 **可视化管理** | 内置 Web 后台，实时查看通知日志、系统日志 |
 | 🌐 **时区友好** | 默认 `Asia/Shanghai`，可通过环境变量调整 |
-| 🎨 **详细日志** | 每条通知记录原始数据、模板渲染结果、发送状态 |
+| 🎨 **详细日志** | 每条通知记录原始数据、模板渲染结果、各渠道发送状态 |
 
 ---
 
@@ -98,7 +114,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.60
+  ttt216/notifycenter:0.62
 ```
 
 ### 使用 Docker Compose
@@ -108,7 +124,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.60
+    image: ttt216/notifycenter:0.62
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -275,6 +291,40 @@ curl -X POST "http://your-server:5400/api/service/notify?api_key=your-api-key" \
   }'
 ```
 
+**也支持 Bark 风格的 GET 请求**：
+
+```
+GET /api/service/notify/{title}/{content}?api_key=xxx&push_img_url=...&push_link_url=...
+```
+
+#### 支持的请求体格式
+
+NotifyCenter 会根据 `Content-Type` 自动识别并解析：
+
+| Content-Type | 适用来源 | 处理方式 |
+|-------------|---------|---------|
+| `application/json` | Emby、Grafana、Uptime Kuma、自建系统等 | 直接 JSON 解析 |
+| `application/x-www-form-urlencoded` | 旧版系统、部分表单型 Webhook | 表单解析，自动解开 `payload=...` 嵌套 JSON 与 URL 编码 |
+| `multipart/form-data` | Emby 带截图通知、带附件的告警 | 提取 `data` 字段中的 JSON |
+| `text/plain` 或空 | 简单脚本（`curl -d "xxx"`） | 先试 JSON，失败则作为纯文本放入 `content` |
+| 未知类型 | 任意 | 依次尝试 JSON、表单、纯文本兜底 |
+
+通用模板会自动做字段归一化：`text` / `message` / `msg` / `body` / `description` → `content`，`subject` / `headline` → `title`，所以不同来源的 payload 都能直接命中同一套模板。
+
+#### 群晖 DSM Webhook 对接
+
+在群晖 **控制面板 → 通知设置** 中：
+
+- 选择「**Webhook**」类型（注意：不要选 "Synology Chat"，后者会发送私有的 `payload=...` 表单格式）
+- **HTTP 方法**：POST
+- **Content-Type**：`application/json`
+- **消息模板**：填写标准 JSON，例如：
+  ```json
+  {"text":"你要发送的消息内容"}
+  ```
+
+消息到达后，通用模板用 `{{ content }}` 即可直接取到正文（`text` 会自动归一化为 `content`）。
+
 **Emby Webhook 直接对接**：
 
 在 Emby 的 Webhook 配置中填入：
@@ -282,7 +332,7 @@ curl -X POST "http://your-server:5400/api/service/notify?api_key=your-api-key" \
 http://your-server:5400/api/service/notify?api_key=your-api-key
 ```
 
-NotifyCenter 会自动识别 Emby 的 payload，无需额外处理。
+NotifyCenter 会自动识别 Emby 的 payload（包括带截图的 multipart 请求），无需额外处理。
 
 ---
 
@@ -363,6 +413,7 @@ NotifyCenter 完整支持 Emby 媒体服务器的 Webhook 通知，专为 Emby �
 | 场景 | 说明 |
 |------|------|
 | 📺 **Emby / Jellyfin 播放通知** | 家人开始观看/新入库剧集时推送到手机 |
+| 🗄️ **群晖 DSM 系统通知** | 群晖系统事件、备份任务、存储空间告警统一转发 |
 | 🖥️ **监控告警** | 服务器 CPU/内存告警推送到多个渠道 |
 | 🤖 **自动化脚本通知** | Python/Shell 脚本执行结果推送 |
 | 📦 **下载完成提醒** | qBittorrent/Aria2 下载完成通知 |
@@ -414,7 +465,20 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.60（当前版本）
+### v0.62（当前版本）
+- 📮 按 Content-Type 智能解析请求体：JSON / form-urlencoded / multipart / 纯文本
+- 🖼️ 通知入口支持 multipart/form-data（Emby 带截图场景）
+- 📄 未知 Content-Type 时依次尝试 JSON、表单、纯文本兜底
+- 🔔 标题缺失或未匹配时统一兜底为 `Notification`，对所有模板类型生效
+
+### v0.61
+- 🧩 通用模板字段自动归一化（text/message/msg/body/description → content；subject/headline → title）
+- 🔍 未匹配变量保留原样字符串（Emby 模板同样适用）
+- 📝 渲染兜底优化：优先输出真实文本，无法获取时输出标准 JSON
+- ✅ 修复升级到 v0.60 后新建 API Key 失败的问题
+- 🔔 删除 / 清空操作改用页面内自定义确认弹窗
+
+### v0.60
 - 🔀 一个 API Key 支持绑定多个路由：每路由独立模板 + 独立渠道集合
 - 📋 推送日志按路由分组展示，每路由的渲染结果与渠道结果一目了然
 - 🛡️ 删除模板/渠道/路由/APIKey 前引用检查与提示
