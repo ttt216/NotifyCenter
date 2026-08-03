@@ -3,13 +3,22 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。支持 JSON、表单、multipart、纯文本等多种请求体格式，原生兼容 Emby、群晖 DSM、Grafana、Uptime Kuma 等主流 Webhook 来源。适合个人自动化、Homelab、NAS 通知、媒体服务器、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.62-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.63-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.63 更新亮点
+
+- 📱 **后台管理页面全面支持移动端浏览**：手机/平板访问自动适配
+- 🍔 顶部导航在手机端折叠为汉堡菜单，点击展开为 3 列网格快捷入口
+- 📐 所有弹窗/对话框自适应屏幕宽度，不再溢出
+- 📊 数据表格在小屏自动隐藏次要列，保留核心信息，支持横向滚动
+- 🔔 所有操作提示从浏览器原生 `alert()` 升级为右上角 Toast，不阻塞操作
+- 📝 工具栏、分页器、筛选栏在窄屏自动换行堆叠
 
 ## ✨ v0.62 更新亮点
 
@@ -114,7 +123,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.62
+  ttt216/notifycenter:0.63
 ```
 
 ### 使用 Docker Compose
@@ -124,7 +133,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.62
+    image: ttt216/notifycenter:0.63
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -465,7 +474,15 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.62（当前版本）
+### v0.63（当前版本）
+- 📱 后台管理页面全面支持移动端浏览器访问
+- 🍔 顶部导航在窄屏折叠为汉堡菜单，展开为 3 列网格快捷入口
+- 📐 所有弹窗、表单、登录卡片自适应屏幕宽度
+- 📊 数据表格在小屏自动隐藏次要列，并支持横向滚动
+- 🔔 操作反馈由浏览器原生 alert 升级为右上角 Toast 提示
+- 📝 工具栏、分页器、筛选栏在窄屏自动堆叠
+
+### v0.62
 - 📮 按 Content-Type 智能解析请求体：JSON / form-urlencoded / multipart / 纯文本
 - 🖼️ 通知入口支持 multipart/form-data（Emby 带截图场景）
 - 📄 未知 Content-Type 时依次尝试 JSON、表单、纯文本兜底
