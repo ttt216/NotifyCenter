@@ -3,13 +3,21 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。支持 JSON、表单、multipart、纯文本等多种请求体格式，原生兼容 Emby、群晖 DSM、Grafana、Uptime Kuma 等主流 Webhook 来源。适合个人自动化、Homelab、NAS 通知、媒体服务器、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.63-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.64-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.64 更新亮点（安全加固）
+
+- 🔒 修复多个安全问题：删除无鉴权的遗留管理 API 和调试端点
+- 🛡️ 后台列表对外部输入统一 HTML 转义，防止存储型 XSS
+- 🔑 默认管理员密码改为随机生成（可用 `ADMIN_PASSWORD` 指定），Session 密钥自动生成并持久化
+- 🌐 CORS 默认收紧为同源，新增 `ALLOWED_ORIGINS`、`COOKIE_SECURE` 环境变量
+- 🧹 Mattermost 渠道配置统一为 webhook_url，精简冗余代码
 
 ## ✨ v0.63 更新亮点
 
@@ -123,7 +131,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.63
+  ttt216/notifycenter:0.64
 ```
 
 ### 使用 Docker Compose
@@ -133,7 +141,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.63
+    image: ttt216/notifycenter:0.64
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -141,6 +149,13 @@ services:
       - ./data:/app/data
     environment:
       - TZ=Asia/Shanghai
+      # 首次初始化时设置管理员账号密码（仅在用户表为空时生效）
+      # - ADMIN_USERNAME=admin
+      # - ADMIN_PASSWORD=your_secure_password
+      # 会话密钥（建议设置为随机字符串；不设置则自动生成并持久化到 data/.session_key）
+      # - ADMIN_SESSION_KEY=your_random_secret
+      # HTTPS 部署时建议开启
+      # - COOKIE_SECURE=true
     restart: unless-stopped
 ```
 
@@ -150,8 +165,14 @@ services:
 
 打开浏览器访问：**http://localhost:5400/admin/login**
 
-- 默认账号：`admin`
-- 默认密码：`123456`
+- 默认账号：`admin`（可通过 `ADMIN_USERNAME` 环境变量修改）
+- 默认密码：
+  - 若设置了 `ADMIN_PASSWORD` 环境变量，使用该密码
+  - 否则首次启动会**自动生成随机密码**并打印在容器日志中（只显示一次），请查看 `docker logs notifycenter` 获取
+
+```bash
+docker logs notifycenter 2>&1 | grep "管理员用户已创建"
+```
 
 > ⚠️ **首次登录会强制要求修改密码**，请设置一个安全的新密码（字母 + 数字组合，不少于 6 位）。
 
@@ -397,7 +418,13 @@ NotifyCenter 完整支持 Emby 媒体服务器的 Webhook 通知，专为 Emby �
 |--------|--------|------|
 | `TZ` | `Asia/Shanghai` | 时区配置 |
 | `DATA_PATH` | 容器内 `/app/data` | 数据存储路径 |
-| `ADMIN_SESSION_KEY` | 内置默认值 | 管理后台会话安全密钥（建议自行设置） |
+| `PORT` | `5400` | 监听端口 |
+| `GIN_MODE` | `release` | Gin 运行模式 |
+| `ADMIN_USERNAME` | `admin` | 首次初始化时的管理员用户名（仅在用户表为空时生效） |
+| `ADMIN_PASSWORD` | 随机生成 | 首次初始化时的管理员密码；未设置则自动生成随机密码并打印到启动日志 |
+| `ADMIN_SESSION_KEY` | 自动生成 | 管理后台会话 Cookie 签名密钥；未设置时自动生成并持久化到 `data/.session_key` |
+| `ALLOWED_ORIGINS` | 空（仅同源） | 允许跨域访问的来源，多个用逗号分隔（如 `https://a.com,https://b.com`） |
+| `COOKIE_SECURE` | `false` | 设为 `true` 时仅在 HTTPS 下发送会话 Cookie（生产环境推荐） |
 | `APP_VERSION` | 从 VERSION 文件读取 | 应用版本号（一般无需设置） |
 
 ---
@@ -443,13 +470,24 @@ curl ifconfig.me
 
 ### 忘记管理员密码怎么办？
 
-删除数据库文件重新初始化：
+**方式一：通过环境变量重置（推荐）**
+
+设置 `ADMIN_PASSWORD` 环境变量仅在用户表为空时生效。若已有用户，可直接修改数据库：
+
+```bash
+docker exec -it notifycenter sh
+# 进入容器后使用 sqlite3 修改密码（需要技术基础）
+```
+
+**方式二：重新初始化（会丢失所有配置）**
 
 ```bash
 docker stop notifycenter
 rm data/notifycenter.db
 docker start notifycenter
 ```
+
+重启后会生成随机密码，查看 `docker logs notifycenter` 获取。
 
 > ⚠️ 该操作会丢失所有配置数据，请谨慎操作。
 
@@ -474,7 +512,16 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.63（当前版本）
+### v0.64（当前版本）
+- 🔒 安全加固：删除无鉴权的遗留管理 API（`/api/channels` 等 CRUD）与调试端点
+- 🛡️ 修复存储型 XSS：所有后台列表对外部输入做 HTML 转义
+- 🔑 默认管理员密码改为随机生成（或通过 `ADMIN_PASSWORD` 指定），不再硬编码 `123456`
+- 🧂 Session 密钥自动生成并持久化，消除硬编码默认值
+- 🌐 CORS 默认同源，新增 `ALLOWED_ORIGINS` / `COOKIE_SECURE` 环境变量
+- 🧹 Mattermost 渠道配置统一为 webhook_url，精简冗余代码
+- 📱 API Key 列表页手机端保留 URL 复制按钮，操作按钮文案优化
+
+### v0.63
 - 📱 后台管理页面全面支持移动端浏览器访问
 - 🍔 顶部导航在窄屏折叠为汉堡菜单，展开为 3 列网格快捷入口
 - 📐 所有弹窗、表单、登录卡片自适应屏幕宽度
