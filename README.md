@@ -3,13 +3,21 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。支持 JSON、表单、multipart、纯文本等多种请求体格式，原生兼容 Emby、群晖 DSM、Grafana、Uptime Kuma 等主流 Webhook 来源。适合个人自动化、Homelab、NAS 通知、媒体服务器、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.64-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.65-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.65 更新亮点（界面体验优化）
+
+- 📌 顶部导航栏和页面标题滚动时固定（类似 Excel 冻结窗格），长列表操作更方便
+- 🎯 导航菜单自动高亮当前所在页面，桌面/移动端一致
+- 👤 标题栏始终显示登录用户名，窄屏不再隐藏
+- 📱 API Key 列表手机端保留调用 URL 及复制按钮，操作按钮文案优化（"数据"）
+- 🐛 修复日志页因 JS 缓存导致加载失败的问题
 
 ## ✨ v0.64 更新亮点（安全加固）
 
@@ -21,71 +29,8 @@
 
 ## ✨ v0.63 更新亮点
 
-- 📱 **后台管理页面全面支持移动端浏览**：手机/平板访问自动适配
-- 🍔 顶部导航在手机端折叠为汉堡菜单，点击展开为 3 列网格快捷入口
-- 📐 所有弹窗/对话框自适应屏幕宽度，不再溢出
-- 📊 数据表格在小屏自动隐藏次要列，保留核心信息，支持横向滚动
-- 🔔 所有操作提示从浏览器原生 `alert()` 升级为右上角 Toast，不阻塞操作
-- 📝 工具栏、分页器、筛选栏在窄屏自动换行堆叠
-
-## ✨ v0.62 更新亮点
-
-- 📮 **全面支持多种请求体格式**：根据 Content-Type 自动识别并解析 `application/json`、`application/x-www-form-urlencoded`、`multipart/form-data`、`text/plain`，覆盖 Emby、Grafana 等各种 Webhook 来源
-- 🖼️ **正式入口支持 multipart/form-data**：带截图/附件的通知也能正常解析（如 Emby 媒体通知）
-- 📄 无 Content-Type 或未知类型时智能兜底：先尝试 JSON，再尝试表单，最后作为纯文本
-- 🔔 标题缺失时统一兜底为 `Notification`，不再出现 `{{ title }}` 原样字符串
-
-## ✨ v0.61 更新亮点
-
-- 🧩 **通用模板字段自动归一化**：`text` / `message` / `msg` / `body` / `description` 会自动映射到 `content`，`subject` / `headline` 映射到 `title`，不同来源的 payload 都能命中同一套模板
-- 🔍 **未匹配变量保留原样**：模板里 `{{ foo }}` 找不到数据时会保留成字符串本身，方便一眼看出哪些字段没传（Emby 模板同样适用）
-- 📝 **渲染兜底更友好**：渲染失败时优先取 payload 的 content/text/message；都没有则输出标准 JSON 字符串
-- ✅ **修复新建 API Key 失败**：升级到 v0.60 时因老数据库遗留字段导致新建 API Key 报错的问题
-- 🔔 **删除 / 清空操作有真实弹窗**：使用页面内自定义确认框，各类嵌入式浏览器也能正常拦截取消
-
-## ✨ v0.60 更新亮点
-
-- 🔀 **一个 API Key 支持绑定多个路由**：每个路由独立使用自己的模板发送到自己的渠道集合，让 Markdown 渠道、纯文本渠道、企业微信 markdown 等各得其所
-- 📋 推送日志按路由分组展示：每个路由的渲染标题/内容、以及各渠道的成功失败一目了然
-- 🛡️ 删除保护与提示：
-  - 删除模板前检查引用，被路由使用时拒绝删除并列出占用路由
-  - 删除渠道前提示会影响哪些路由
-  - 删除路由前提示归属的 API Key
-  - 删除 API Key 前提示会释放的路由列表
-- 🔄 抢占式路由转移：APIKey 保存时若勾选了已被别的 APIKey 占用的路由，会弹窗让你确认"转移"
-- 🧭 路由列表新增"归属 APIKey"列，一眼看清路由被谁占用
-- 🗃️ 平滑数据迁移：老的 `apikeys.route_id` 会自动反填到 `routes.api_key_id`，无需手动处理
-
-## ✨ v0.58 更新亮点
-
-- 🧹 清理冗余代码，精简项目结构
-- 🐛 修复通用模板的变量显示错误
-
-## ✨ v0.57 更新亮点
-
-- 🕒 日志保留天数控制（推送日志 / 后端日志各自独立，支持 7天/30天/永久）
-- 🗑️ 一键清空推送日志 / 后端日志
-- 🧹 每日凌晨自动清理超期日志
-- 🐛 修复 Bark 渠道图标不生效
-- 🐛 修复保留天数切换取消后仍触发清理
-- 🎨 搜索框宽度优化，工具栏布局更紧凑
-
-## ✨ v0.56 更新亮点
-
-- 🎨 新增网站图标（favicon）：铃铛 + 信号波设计，紫蓝色渐变背景
-- 📱 支持浏览器标签栏、书签、移动端"添加到主屏幕"显示项目 Logo
-
-## ✨ v0.55 更新亮点
-
-- 🐛 修复弹窗内文本框选中文字后松开鼠标误关闭弹窗的问题
-
-## ✨ v0.54 更新亮点
-
-- 🌐 **企业微信 API 代理**：支持通过代理服务器调用企业微信 API，解决动态 IP 用户无法配置"可信 IP"的问题
-- 📩 **企业微信接收消息回调**：内置回调地址，支持签名校验、AES 解密及消息转发
-- 🎯 **渠道配置简化**：Bark、Mattermost、企业微信群机器人 支持直接粘贴完整 URL
-- 🛡️ **API 保底解析**：接收非 JSON 请求体时自动作为纯文本消息处理
-- 🐛 **多项 Bug 修复**：空列表显示、删除渠道后自动刷新、回调 URL 显示等
+- 📱 后台管理页面全面支持移动端浏览：手机/平板访问自动适配，汉堡菜单展开为 3 列网格快捷入口
+- 📐 弹窗/表格/工具栏自适应小屏，操作提示升级为右上角 Toast
 
 ---
 
@@ -131,7 +76,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.64
+  ttt216/notifycenter:0.65
 ```
 
 ### 使用 Docker Compose
@@ -141,7 +86,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.64
+    image: ttt216/notifycenter:0.65
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -512,7 +457,16 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.64（当前版本）
+### v0.65（当前版本）
+- 📌 顶部导航栏与页面标题滚动时固定（sticky），长列表操作无需回滚到顶部
+- 🎯 导航菜单自动高亮当前页面（桌面/移动端一致）
+- 👤 标题栏始终显示登录用户名，窄屏不再隐藏
+- 🧩 新增 `nav-active.js`，统一样式与逻辑
+- 📱 API Key 列表手机端保留调用 URL 与复制按钮，操作列"调用"文案改为"数据"
+- 🐛 修复日志页因 JS 缓存导致加载失败的问题（版本号统一提升）
+- 🧹 Mattermost 编辑/新增只保留 webhook_url，去除高级设置
+
+### v0.64
 - 🔒 安全加固：删除无鉴权的遗留管理 API（`/api/channels` 等 CRUD）与调试端点
 - 🛡️ 修复存储型 XSS：所有后台列表对外部输入做 HTML 转义
 - 🔑 默认管理员密码改为随机生成（或通过 `ADMIN_PASSWORD` 指定），不再硬编码 `123456`
@@ -549,6 +503,10 @@ docker start notifycenter
 - 🔄 抢占式路由转移：勾选归属他人的路由需二次确认
 - 🧭 路由列表新增「归属 APIKey」列
 - 🗃️ 自动迁移老的 `apikeys.route_id` 到 `routes.api_key_id`
+
+### v0.58 及更早版本
+
+早期版本更新日志请查看 [GitHub Releases](https://github.com/ttt216/notifycenter/releases)。
 
 ---
 
