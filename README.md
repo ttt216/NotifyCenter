@@ -3,13 +3,24 @@
 **一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。支持 JSON、表单、multipart、纯文本等多种请求体格式，原生兼容 Emby、群晖 DSM、Grafana、Uptime Kuma 等主流 Webhook 来源。适合个人自动化、Homelab、NAS 通知、媒体服务器、监控告警等场景。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.65-blue.svg" alt="version">
+  <img src="https://img.shields.io/badge/version-0.67-blue.svg" alt="version">
   <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
   <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
 </p>
 
 ---
+
+## ✨ v0.67 更新亮点
+
+- 🐛 Emby 模板系统事件下 `{{ UserName }}` 等占位符字面量暴露的问题修复
+
+## ✨ v0.66 更新亮点（图标适配）
+
+- 📱 iOS Safari "添加到主屏幕" 适配：新增 4 个 apple-touch-icon PNG（180/152/120/76）
+- 🎨 iPhone/iPad 主屏快捷方式可显示紫蓝渐变铃铛图标
+- 🖼️ 图标按现有 favicon.svg 风格光栅化生成，保持视觉一致
+- 🐛 修复 iOS 添加书签到桌面无图标的兼容性问题
 
 ## ✨ v0.65 更新亮点（界面体验优化）
 
@@ -76,7 +87,7 @@ docker run -d \
   -v $(pwd)/data:/app/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  ttt216/notifycenter:0.65
+  ttt216/notifycenter:0.67
 ```
 
 ### 使用 Docker Compose
@@ -86,7 +97,7 @@ version: '3.8'
 
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.65
+    image: ttt216/notifycenter:0.67
     container_name: notifycenter
     ports:
       - "5400:5400"
@@ -457,7 +468,15 @@ docker start notifycenter
 
 ## 📄 更新日志
 
-### v0.65（当前版本）
+### v0.67（当前版本）
+- 🐛 Emby 模板系统事件下 `{{ UserName }}` 等占位符字面量暴露的问题修复
+
+### v0.66
+- 📱 iOS Safari 添加到主屏幕适配：新增 4 个 apple-touch-icon PNG
+- 🎨 iPhone/iPad 主屏快捷方式显示紫蓝渐变铃铛图标
+- 🖼️ 图标按 favicon.svg 风格光栅化生成，视觉保持一致
+
+### v0.65
 - 📌 顶部导航栏与页面标题滚动时固定（sticky），长列表操作无需回滚到顶部
 - 🎯 导航菜单自动高亮当前页面（桌面/移动端一致）
 - 👤 标题栏始终显示登录用户名，窄屏不再隐藏
