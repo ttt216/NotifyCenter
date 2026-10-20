@@ -1,68 +1,67 @@
 <a href="https://afdian.com/item/9ac2dafac6e011f19a1552540025c377"><img width="2400" height="1350" alt="cover" src="https://github.com/user-attachments/assets/b0dc5275-a5bf-45f3-b8d7-1d5fc6916b13" /></a>
 # 📬 NotifyCenter - 多渠道通知中心
 
-**一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。支持 JSON、表单、multipart、纯文本等多种请求体格式，原生兼容 Emby、群晖 DSM、Grafana、Uptime Kuma 等主流 Webhook 来源。适合个人自动化、Homelab、NAS 通知、媒体服务器、监控告警等场景。本项目已经入驻了爱发电，1.0版本正在上线途中，喜欢的朋友请关注一下。
+**一个集中管理、开箱即用的通知转发服务**，让你通过一个统一的 API，把消息推送到 Bark、Telegram、Mattermost、企业微信、PushDeer 等多个平台。支持 JSON、表单、multipart、纯文本等多种请求体格式，原生兼容 Emby、群晖 DSM、Grafana、Uptime Kuma 等主流 Webhook 来源。适合个人自动化、Homelab、NAS 通知、媒体服务器、监控告警等场景。
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-0.70-blue.svg" alt="version">
-  <img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg" alt="go">
-  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
-  <img src="https://img.shields.io/badge/docker-ready-2496ED.svg" alt="docker">
+<p align="center">  
+  <img src="https://img.shields.io/badge/version-1.0-blue.svg" alt="version">  
+  <img src="https://img.shields.io/badge/go-1.25+-00ADD8.svg" alt="go">  
+  <img src="https://img.shields.io/badge/免费版%20%2B%20增强版%20Pro-blueviolet.svg" alt="edition">  
+  <img src="https://img.shields.io/badge/docker-amd64%20%7C%20arm64-2496ED.svg" alt="docker">  
 </p>
 
 ---
 
-## ✨ v0.70 更新亮点
+## ✨ v1.0 更新亮点
 
-- 🎬 **Jellyfin 模板支持**：新增 Jellyfin 专用模板类型，自动识别播放/入库事件，与 Emby 模板同等体验
-- 🔇 **通知去重/防轰炸**：相同内容在时间窗口内自动合并，防止重复推送；可配置窗口、最大合并次数，重启配置不丢失
-- 🧩 **剧集入库通知合并**：Emby / Jellyfin 的「新剧集入库」支持按剧名合并，一部 40 集的剧整季入库只发一条通知，可配置合并窗口
-- 📦 **配置导入/导出**：一键导出所有渠道、模板、路由、API Key、系统配置为 JSON，支持备份与跨实例迁移
-- 📊 **仪表盘统计增强**：近 7 天发送趋势图、各渠道成功率统计、最近失败日志，一目了然
-- 🧪 **模板在线调试**：在模板编辑页直接输入测试数据，实时预览渲染结果，并明确提示命中「事件子模板」还是「主模板」
-- 🧩 **模板编辑界面优化**：Emby/Jellyfin 模板的主模板与子模板分区色块展示，主模板默认填充内置内容并锁定防误改，勾选「自定义主模板」后可解锁编辑
-- 🌙 **深色模式**：所有管理页面支持深色/浅色模式切换，自动跟随系统，夜间使用更护眼
-- 📘 **API 文档（Swagger UI）**：内置 OpenAPI 3.0 文档，管理后台直接浏览所有 API 接口
-- ⚙️ **系统设置页**：新增统一的设置管理页面，去重配置、导入导出集中管理
-
-## ✨ v0.69 更新亮点
-
-- 🔁 **发送可靠性**：渠道发送失败自动重试一次，缓解瞬时网络抖动导致的丢通知
-- 🔐 **部署安全**：Docker 启动自动识别弱/占位 session key 并改用持久化随机密钥
-- 🛡️ **企微回调校验**：URL 验证与消息接收均校验 ReceiverID 与渠道 CorpID 一致，防止伪造消息
+- 🔑 **授权体系**：免费版 + 增强版 Pro 单镜像分发，用离线签名授权码在运行时解锁，无需联网、不上报数据
+- 📤 **送达保障** *（Pro）*：失败通知持久化重试 + 退避封顶 + 渠道熔断 + 死信人工重放，**重启不丢消息**
+- 🌙 **静默时段** *（Pro）*：夜间非紧急消息延迟到早间补发（不丢弃），支持跨午夜窗口与穿透优先级
+- 📣 **消息升级与确认** *（Pro）*：重要通知超时未确认自动重推 / 升级渠道，附一键确认链接
+- 📥 **入站归档与重放** *（Pro）*：第三方回调原样存档、可重放，令牌鉴权 + 限速 + 保留策略
+- 🕘 **模板版本历史** *（Pro）*：模板改动留痕，支持 diff 对比与一键回滚
+- 🧩 **扩展渠道包** *（Pro）*：新增 ntfy / Gotify / Discord；**原有 7 种渠道继续免费**
+- 📊 **监控指标** *（Pro）*：Prometheus `/metrics`，可接 Grafana
+- 🧹 **代码基座大清理**：移除历史迁移与兼容代码，1.0 从干净数据库起步
 
 ---
 
 ## 🎯 核心特性
 
-| 特性 | 说明 |
-|------|------|
-| 🚀 **一键部署** | 单 Docker 镜像，SQLite 内嵌，无需外部数据库 |
-| 📡 **7 种渠道** | Bark、Telegram、Mattermost、企业微信 x2、PushDeer、自定义 Webhook |
-| 🎬 **Emby / Jellyfin** | 播放/入库事件智能识别，自动生成图片 URL，独立模板；剧集入库支持按剧名合并 |
-| 📮 **多格式请求体** | 自动识别 JSON / 表单 / multipart / 纯文本 |
-| 📝 **模板系统** | Pongo2/Jinja2 语法，支持变量、条件、循环；在线预览调试 |
-| 🔀 **路由规则** | 一次 API 调用推送到多渠道，一 Key 多路由，每路由独立模板 |
-| 🔑 **API Key 认证** | 路由级安全隔离，支持禁用、有效期、调用统计 |
-| 🔇 **通知去重** | 相同内容窗口内自动合并，防轰炸；可配置窗口与最大合并次数 |
-| 📦 **配置导入/导出** | 一键备份与恢复，跨实例迁移轻松搞定 |
-| 📊 **可视化管理** | Web 后台 + 仪表盘 + 趋势图 + 成功率 + 实时日志 |
-| 🌙 **深色模式** | 所有页面深色/浅色切换，自动跟随系统 |
-| 📘 **API 文档** | 内置 Swagger UI / OpenAPI 3.0 |
+| 特性                     | 说明                                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------- |
+| 🚀 **一键部署**            | 单 Docker 镜像，无需外部数据库，一条命令就能跑起来                                                         |
+| 📡 **10 种渠道**          | Bark、Telegram、Mattermost、企业微信 x2、PushDeer、自定义 Webhook；ntfy / Gotify / Discord *（Pro）* |
+| 🎬 **Emby / Jellyfin** | 播放/入库事件智能识别，自动生成图片 URL，独立模板；剧集入库支持按剧名合并 *（Pro）*                                       |
+| 📮 **多格式请求体**          | 自动识别 JSON / 表单 / multipart / 纯文本                                                      |
+| 📝 **模板系统**            | Pongo2/Jinja2 语法，支持变量、条件、循环；在线预览调试；版本历史 + diff + 回滚 *（Pro）*                           |
+| 🔀 **路由规则**            | 一次 API 调用推送到多渠道，一 Key 多路由，每路由独立模板                                                     |
+| 🔑 **API Key 认证**      | 路由级安全隔离，支持禁用、有效期、调用统计                                                                 |
+| 🔓 **12 项增强功能**       | 送达保障、静默时段、消息升级、入站重放、模板版本、故障转移、监控指标等 —— 详见下文「**免费版 vs 增强版**」                          |
+| 🔇 **通知去重**            | 相同内容窗口内自动合并，防轰炸；可配置窗口与最大合并次数                                                          |
+| 📦 **配置导入/导出**         | 一键备份与恢复，跨实例迁移轻松搞定                                                                     |
+| 📊 **可视化管理**           | Web 后台 + 仪表盘 + 趋势图 + 成功率 + 实时日志                                                       |
+| 🌙 **深色模式**            | 所有页面深色/浅色切换，自动跟随系统                                                                    |
+| 📘 **API 文档**          | 内置 Swagger UI / OpenAPI 3.0                                                           |
 
 ---
 
 ## 📦 支持的通知渠道
 
-| 渠道 | 类型标识 | 简要说明 |
-|------|---------|---------|
-| **Bark** | `bark` | iOS 免费推送 App，支持推送级别、角标、加密、自动复制、点击跳转、图标等 |
-| **Telegram** | `telegram` | 官方 Bot API，支持个人 & 群组，HTML/Markdown 富文本 |
-| **Mattermost** | `mattermost` | 开源团队协作平台，通过 Incoming Webhook 推送，支持 Markdown |
-| **企业微信（应用消息）** | `wecom` | 通过企业自建应用推送到 App，支持指定接收人/部门/标签，需配置可信 IP |
-| **企业微信（群机器人）** | `wecom_webhook` | 通过群机器人 Webhook 推送到企业微信群，无需可信 IP，支持 text/markdown |
-| **PushDeer** | `pushdeer` | 开源推送服务，支持官方 & 自建服务器，支持 markdown/text/image |
-| **自定义 Webhook** | `webhook` | 对接任意支持 Webhook 的第三方服务（如 Slack、飞书、钉钉） |
+| 渠道              | 类型标识            | 简要说明                                             |
+| --------------- | --------------- | ------------------------------------------------ |
+| **Bark**        | `bark`          | iOS 免费推送 App，支持推送级别、角标、加密、自动复制、点击跳转、图标等          |
+| **Telegram**    | `telegram`      | 官方 Bot API，支持个人 & 群组，HTML/Markdown 富文本           |
+| **Mattermost**  | `mattermost`    | 开源团队协作平台，通过 Incoming Webhook 推送，支持 Markdown      |
+| **企业微信（应用消息）**  | `wecom`         | 通过企业自建应用推送到 App，支持指定接收人/部门/标签，需配置可信 IP           |
+| **企业微信（群机器人）**  | `wecom_webhook` | 通过群机器人 Webhook 推送到企业微信群，无需可信 IP，支持 text/markdown |
+| **PushDeer**    | `pushdeer`      | 开源推送服务，支持官方 & 自建服务器，支持 markdown/text/image       |
+| **自定义 Webhook** | `webhook`       | 对接任意支持 Webhook 的第三方服务（如 Slack、飞书、钉钉）             |
+| **ntfy**        | `ntfy`          | 开源推送服务，支持自建服务器与优先级/标签 *（Pro）*                    |
+| **Gotify**      | `gotify`        | 自建推送服务，支持优先级 *（Pro）*                             |
+| **Discord**     | `discord`       | 通过 Discord Webhook 推送到频道 *（Pro）*                 |
+
+> 💡 **渠道收费说明**：`ntfy` / `Gotify` / `Discord` 为 **v1.0 新增**的增强版（Pro）渠道；**v0.70 已有的 7 种渠道（Bark、Telegram、Mattermost、企业微信 x2、PushDeer、自定义 Webhook）继续免费**，不受授权影响。
 
 ---
 
@@ -74,10 +73,11 @@
 docker run -d \
   --name notifycenter \
   -p 5400:5400 \
-  -v $(pwd)/data:/app/data \
+  -v $(pwd)/data:/data \
   -e TZ=Asia/Shanghai \
+  -e DATA_PATH=/data \
   --restart unless-stopped \
-  ttt216/notifycenter:0.70
+  ttt216/notifycenter:1.0
 ```
 
 ### 使用 Docker Compose
@@ -85,16 +85,18 @@ docker run -d \
 ```yaml
 services:
   notifycenter:
-    image: ttt216/notifycenter:0.70
+    image: ttt216/notifycenter:1.0
     container_name: notifycenter
     ports:
       - "5400:5400"
     volumes:
-      - ./data:/app/data
+      - ./data:/data
     environment:
       - TZ=Asia/Shanghai
+      - DATA_PATH=/data
       # - ADMIN_PASSWORD=your_secure_password
       # - ADMIN_SESSION_KEY=your_random_secret
+      # 授权码与「本实例对外地址」都在「系统设置」页面配置，无需改这里
     restart: unless-stopped
 ```
 
@@ -102,12 +104,12 @@ services:
 
 ### 访问后台
 
-打开浏览器访问：**http://localhost:5400/admin/login**
+打开浏览器访问：**<http://localhost:5400/admin/login>**
 
 - 默认账号：`admin`（可通过 `ADMIN_USERNAME` 环境变量修改）
 - 默认密码：
   - 若设置了 `ADMIN_PASSWORD` 环境变量，使用该密码
-  - 否则首次启动会**自动生成随机密码**并打印在容器日志中（只显示一次），请查看 `docker logs notifycenter` 获取
+  - 否则首次启动使用**默认密码 `123456`**，并在启动日志中打印，请查看 `docker logs notifycenter` 获取
 
 ```bash
 docker logs notifycenter 2>&1 | grep "管理员用户已创建"
@@ -117,260 +119,108 @@ docker logs notifycenter 2>&1 | grep "管理员用户已创建"
 
 ---
 
-## 📖 使用指南
+## 📖 怎么用？
 
-### 1️⃣ 添加通知渠道
+装好之后**不用回来翻文档**——后台顶部菜单里有「**📖 指南**」，从建渠道到排错全在里面：
 
-进入 **渠道（Channels）** 菜单，点击"添加渠道"，根据不同类型填写配置。
+| 你在找什么 | 去哪看 |
+| --- | --- |
+| 5 分钟跑通（建渠道 → 模板 → 路由 → Key） | 📖 指南 → **0 跑通** |
+| 某个字段怎么填、每种渠道要准备什么 | 📖 指南 → **2 分步操作** |
+| Emby / Grafana / 群晖 / qBittorrent 怎么接 | 📖 指南 → **3 对接实战** |
+| API 参数、`priority`、返回字段 | 📖 指南 → **4 调用 API**，或 📘 API（Swagger） |
+| 发不出去 / 没收到 | 📖 指南 → **6 排错** |
 
-#### 📱 Bark（iOS 推送）
-
-安装 Bark App → 复制完整推送 URL → 粘贴到 NotifyCenter 的 **API URL** 字段即可。支持推送级别、角标、分组、加密、自动复制等高级选项。
-
-#### 💬 Telegram
-
-通过 [@BotFather](https://t.me/BotFather) 创建 Bot 获取 Token → 获取 Chat ID（个人用 [@userinfobot](https://t.me/userinfobot)，群组用 `getUpdates`）→ 在 NotifyCenter 中填写 Bot Token 和 Chat ID。支持 HTML / MarkdownV2 富文本。
-
-#### 🗣️ Mattermost
-
-在 Mattermost 创建传入 Webhook → 复制 URL 到 NotifyCenter。可选用户名、头像、指定频道。支持 Markdown，图片用 `![]({{BackdropImgUrl}})` 可自动预览。
-
-#### 🏢 企业微信（应用消息）
-
-在企业微信管理后台创建自建应用，获取 CorpID、AgentID、Secret。⚠️ 需在"企业可信IP"中配置服务器出口 IP。支持指定接收人/部门/标签。
-
-#### 🤖 企业微信（群机器人）
-
-在群内添加群机器人获取 Webhook → 在 NotifyCenter 填写 Webhook Key（支持完整 URL 或纯 key）。支持 text / markdown 消息类型，无需配置可信 IP。
-
-#### 📮 PushDeer
-
-在 PushDeer App 生成 PushKey → 在 NotifyCenter 填写。支持官方 & 自建服务器，支持 markdown / text / image 三种消息类型。
-
-#### 🌐 自定义 Webhook
-
-对接任意 Webhook 服务（Slack、飞书、钉钉等）。可自定义 URL、Method、Headers、Body 模板。变量：`{{title}}`、`{{content}}`、`{{img_url}}`、`{{link_url}}`。
+> 指南在免费版里同样开放，不需要授权。
 
 ---
 
-### 2️⃣ 配置模板
+## 🆓 免费版 vs 🔓 增强版
 
-进入 **模板（Templates）** 菜单，点击"添加模板"。
+两个版本**共用同一个 Docker 镜像**，装的时候不用选。区别只在于是否填了有效授权码。
 
-**三种模板类型：**
+**免费版没有时间限制**，长期自用完全够用。未授权时增强功能**不会报错、也不会丢消息**，只是不生效
+（比如「剧集入库合并」会退化成逐条发送）。
 
-- **general（通用模板）**：适用于普通 API 通知，配置标题和内容
-- **emby（Emby 专用）**：自动识别 Emby Webhook 事件（播放开始/暂停/入库等），支持电影/剧集分别配置
-- **jellyfin（Jellyfin 专用）**：自动识别 Jellyfin Webhook 事件，与 Emby 模板同等体验
+| 能力 | 免费版 | 增强版 Pro |
+| --- | :---: | --- |
+| **通知渠道** | 7 种：Bark / Telegram / Mattermost / 企业微信 ×2 / PushDeer / 自定义 Webhook | **+3 种**：ntfy / Gotify / Discord |
+| **Emby / Jellyfin** | 事件自动识别、主模板 + 事件子模板、在线预览 | **+ 剧集入库合并**（整季 40 条压成 1 条） |
+| **模板系统** | Pongo2 语法：变量、条件、循环 | **+ 版本历史**：diff 对比、一键回滚 |
+| **路由** | 一个模板绑多个渠道，一次调用全推 | **+ 备用渠道故障转移**（主渠道全挂自动切） |
+| **通知去重** | ✅ 相同内容窗口内合并 | ✅ |
+| **送达保障** | —（失败只记日志） | ✅ 持久化队列 + 退避重试 + 渠道熔断 + 死信人工重放 |
+| **静默时段** | — | ✅ 夜间非紧急消息延迟到早间补发，可配穿透优先级 |
+| **消息升级与确认** | — | ✅ 超时未确认自动重推 / 升级渠道，附确认链接 |
+| **入站归档与重放** | — | ✅ 第三方回调原样存档、可重放 |
+| **关系图谱** | — | ✅ 可视化 Key → 路由 → 渠道的引用关系 |
+| **监控指标** | — | ✅ Prometheus `/metrics`，可接 Grafana |
+| **通知重新发送** | — | ✅ 调用记录里一键重发 |
+| **Jellyfin 噪音过滤** | — | ✅ 自动过滤播放进度类噪音 |
+| **多格式请求体** | ✅ JSON / 表单 / multipart / 纯文本 | ✅ |
+| **API Key** | ✅ 绑路由、可禁用、可设有效期 | ✅ |
+| **配置导入导出** | ✅ | ✅ |
+| **可视化后台** | ✅ 仪表盘、趋势图、调用记录、深色模式 | ✅ |
+| **Swagger + 使用指南** | ✅ | ✅ |
+| **授权期限** | 永久免费 | 买断永久 |
 
-**模板语法**：使用 Pongo2/Jinja2 语法，支持变量替换、条件判断、循环等。
-
-示例：
-```
-🎬 {{ UserName }} 正在观看 {{ ItemName }}
-📺 设备：{{ DeviceName }}
-⏱️ 进度：{{ ProgressPercent }}%
-```
-
-**🧩 主模板与事件子模板**（仅 Emby / Jellyfin 类型）：
-
-- **主模板**：匹配不到事件子模板时兜底渲染。新建时会自动填充系统内置内容，默认锁定防止误改；确实需要修改时勾选「自定义主模板」，确认后即可编辑。
-- **事件子模板**：按事件类型（电影播放、剧集播放、新电影入库等）分别配置，优先级高于主模板，推荐日常使用。
-- 界面上两个区域用不同底色区分，主模板在上、子模板在下，便于快速定位。
-
-**🧪 在线调试**：在模板编辑页点击「预览」按钮，输入测试数据即可实时查看渲染结果，无需实际发送通知；预览结果会标注本次命中的是事件子模板还是主模板。
-
----
-
-### 3️⃣ 创建路由（Route）
-
-进入 **路由（Routes）** 菜单，点击"添加路由"。
-
-- 选择关联的**模板**
-- 选择要推送到的**渠道**（可多选，一次通知同时发到多个平台）
-- 保存后即可使用
+> ⚠️ **渠道说明**：`ntfy` / `Gotify` / `Discord` 是 v1.0 **新增**的 Pro 渠道，**原有 7 种渠道继续免费**，不要误读为「渠道整体收费」。
 
 ---
 
-### 4️⃣ 生成 API Key
+## ⚙️ 常用配置
 
-进入 **API Key** 菜单，点击"添加 API Key"。
+绝大多数设置都能在**管理后台**里改，不需要动环境变量。只有下面这几个需要在启动容器时指定：
 
-- 每个 API Key 绑定一个路由
-- 保存后会生成唯一的 API Key，用于调用 API
+| 变量名                                 | 默认值                | 说明                                                               |
+| ----------------------------------- | ------------------ | ---------------------------------------------------------------- |
+| `TZ`                                | `Asia/Shanghai`    | 时区                                                               |
+| `PORT`                              | `5400`             | 监听端口                                                             |
+| `DATA_PATH`                         | `/data`            | 数据目录（容器内路径）                                                      |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | `admin` / `123456` | **仅首次初始化**时生效；登录后会强制你改密码                                         |
+| `NOTIFYCENTER_LICENSE`              | 空                  | 增强版授权码。**更推荐在后台「系统设置 → 授权」里粘贴**（可持久化、随时更换）；用环境变量下发时，后台的保存/清除不会生效 |
 
----
+> 💡 完整的环境变量清单（`ALLOWED_ORIGINS`、`COOKIE_SECURE`、`METRICS_TOKEN`、`ADMIN_SESSION_KEY` 等）见 [`TECHNICAL.md`](TECHNICAL.md)。  
+> 💡 「本实例对外地址」也在后台设置里填，不用环境变量。
 
-### 5️⃣ 发送通知
 
-```bash
-curl -X POST "http://your-server:5400/api/service/notify?api_key=your-api-key" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"通知标题","content":"通知内容","img_url":"...","link_url":"..."}'
-```
+## 📦 备份与升级
 
-**自动识别请求格式**：支持 JSON / 表单 / multipart / 纯文本，通用模板自动归一化字段（`text/message/msg/body` → `content`，`subject/headline` → `title`）。
+所有数据都在 `data/` 目录里（渠道、模板、路由、API Key、日志、授权码）。**备份就是复制这个目录**，换机器迁移也是复制它。
 
-**直接对接 Emby / Jellyfin / Grafana / Uptime Kuma / 群晖 DSM** 等主流 Webhook，无需额外配置。
+> ⚠️ `data/` 里含有授权码与 API Key 的加密材料，备份文件请当作敏感数据保管。
 
----
+### 从旧版本升级（v0.70 → v1.0）
 
-## 🎬 Emby / Jellyfin 专用模板详解
+v1.0 是**全新的数据起点**，不支持直接替换镜像的无感升级。请按以下步骤迁移：
 
-NotifyCenter 完整支持 Emby 和 Jellyfin 媒体服务器，两者体验一致，仅事件名与 Webhook 格式不同。
+1. 在旧版本（v0.70+）管理后台 → 设置页 → 「配置导出」，下载 JSON 备份
+2. 停止旧容器，**备份** `data/` 目录
+3. 删除旧的 `data/notifycenter.db`（或挂载新的空 data 目录）
+4. 使用 v1.0 镜像启动新容器，完成初始化
+5. 登录管理后台 → 设置页 → 「配置导入」，上传之前导出的 JSON
+6. 所有渠道、模板、路由、API Key、系统配置将完整恢复
 
-### 自动事件识别
+> ⚠️ **注意**：通知日志与后台日志不随配置导出，升级到 v1.0 后历史日志会清空。  
+> 💡 导出的 JSON 已包含 API Key 的完整校验材料，导入空实例后**原来的 Key 依然可用**，不用重新生成。
 
-| 媒体服务器 | 播放事件 | 入库事件 |
-|-----------|---------|---------|
-| **Emby** | `playback.start/stop/pause/unpause` → `playback.movie` / `playback.episode` | `library.new` → `library.new_movie` / `library.new_episode` |
-| **Jellyfin** | `PlaybackStart/Stop/Pause/Unpause` → `playback.movie` / `playback.episode` | `ItemAdded` → `library.new_movie` / `library.new_episode` |
+### 同版本升级（v1.0.x 小版本）
 
-### 可用变量（Emby & Jellyfin 通用）
-
-| 变量 | 说明 |
-|------|------|
-| `Event` | 事件类型 |
-| `UserName` | 用户名 |
-| `ItemName` | 媒体名称 |
-| `ItemType` | 媒体类型（Movie / Episode） |
-| `ItemYear` | 发行年份 |
-| `ItemOverview` | 简介（自动截断至 200 字符） |
-| `SeriesName` | 剧集名称（仅剧集） |
-| `Season` / `Episode` | 季数 / 集数 |
-| `DeviceName` / `Client` / `ClientIp` | 播放设备信息 |
-| `ServerName` / `ServerVersion` | 服务器信息 |
-| `DateLocal` | 本地时间（自动转换时区） |
-| `CoverImgUrl` / `PrimaryImgUrl` | 海报封面（竖版；剧集为整剧海报） |
-| `BackdropImgUrl` | 剧照/背景图（横版） |
-| `LogoImgUrl` | 影片 Logo 图 |
-| `EpisodeImgUrl` | 单集画面（仅剧集播放时有值） |
-| `ProgressMinutes` / `TotalMinutes` / `ProgressPercent` | 播放进度 |
-| `EpisodeCount` / `EpisodeList` / `FirstEpisode` | 合并后的集数 / 集号列表（如 `S01E01-E40`）/ 首集标题（仅入库合并场景有值） |
-| `Episodes` | 合并后的每集数组，可配合 `{% for ep in Episodes %}` 遍历（每项含 `Season` / `Episode` / `ItemName`） |
-
-> **图片 URL 说明**：需在模板配置中填写 **Emby / Jellyfin 服务器地址**（如 `https://emby.example.com:8086`），系统自动生成图片 URL。不填写则图片变量为空字符串。
-
-### 模板匹配规则
-
-渲染时按以下优先级匹配，逐级回退：
-
-1. **事件子模板**：按识别出的事件类型精确匹配（如 `playback.episode`）
-2. **主模板**：未匹配到事件子模板时使用，新建模板时自动填充系统内置内容
-3. **内置默认模板**：主模板为空时由系统兜底
-
-主模板默认锁定不可编辑，如需修改请勾选编辑页的「自定义主模板」并确认。模板预览会显示本次命中层级，便于排查。
-
-### 🧩 剧集入库通知合并
-
-当 Emby / Jellyfin 整季批量入库时，每一集都会触发一条通知，40 集的剧一次入库就会收到 40 条消息。开启「合并同一剧集的入库通知」后：
-
-- 系统按 **剧名 + 路由** 分组，把短时间内到达的同一部剧的多集**合并成一条**通知推送
-- **合并窗口**默认 60 秒（可调 10–300 秒），从首条通知到达时开始计时，到点统一发送
-- 合并后可使用 `EpisodeCount`（本次集数）、`EpisodeList`（集号列表，如 `S01E01-E40`）、`FirstEpisode`（首集标题）、`Episodes`（每集数组）等变量自定义模板
-- 只入库 1 集时行为与未开启完全一致（仅多一个窗口延迟）
-- 合并状态仅存在内存，进程重启会丢失尚未到期的批次（最多丢一个窗口内的通知）
-
-> 💡 在模板编辑页 → 「📺 新剧集入库」子模板 → 勾选「合并同一剧集的入库通知」即可启用。该选项仅在勾选了该事件子模板时可用。
-
-### 直接对接 Webhook
-
-在 Emby 或 Jellyfin 的 Webhook 插件配置中填入：
-```
-http://your-server:5400/api/service/notify?api_key=your-api-key
-```
-NotifyCenter 自动识别来源类型，无需额外配置（包括带截图的 multipart 请求）。
-
-### 示例：剧集播放模板
-
-```
-🎬 {{ UserName }} 正在观看《{{ SeriesName }}》
-📺 第 {{ Season }} 季第 {{ Episode }} 集 - {{ ItemName }}
-⏱️ 进度：{{ ProgressPercent }}%
-
-![]({{ EpisodeImgUrl }})
-```
-
----
-
-## ⚙️ 环境变量
-
-| 变量名 | 默认值 | 说明 |
-|--------|--------|------|
-| `TZ` | `Asia/Shanghai` | 时区配置 |
-| `DATA_PATH` | 容器内 `/app/data` | 数据存储路径 |
-| `PORT` | `5400` | 监听端口 |
-| `GIN_MODE` | `release` | Gin 运行模式 |
-| `ADMIN_USERNAME` | `admin` | 首次初始化时的管理员用户名（仅在用户表为空时生效） |
-| `ADMIN_PASSWORD` | 随机生成 | 首次初始化时的管理员密码；未设置则自动生成随机密码并打印到启动日志 |
-| `ADMIN_SESSION_KEY` | 自动生成 | 管理后台会话 Cookie 签名密钥；未设置时自动生成并持久化到 `data/.session_key` |
-| `ALLOWED_ORIGINS` | 空（仅同源） | 允许跨域访问的来源，多个用逗号分隔（如 `https://a.com,https://b.com`） |
-| `COOKIE_SECURE` | `false` | 设为 `true` 时仅在 HTTPS 下发送会话 Cookie（生产环境推荐） |
-| `APP_VERSION` | 从 VERSION 文件读取 | 应用版本号（一般无需设置） |
-
----
-
-## ⚙️ 系统设置
-
-进入 **设置（Settings）** 菜单集中管理：
-
-### 🔇 通知去重
-
-防止相同内容短时间重复推送（如监控反复告警）。
-
-- **启用去重**：总开关
-- **时间窗口**：默认 60 秒，相同内容重复发送会被合并
-- **最大合并次数**：默认 10 次，超过后仍然发送（防止完全静默）
-- 按路由独立计数（不同路由分别去重）
-
-### 📦 配置导入/导出
-
-一键备份或迁移所有配置（渠道、模板、路由、API Key、系统配置）。导入支持 `skip`（跳过已存在）和 `overwrite`（覆盖）两种模式。
-
-> 💡 **升级迁移**：导出旧版配置 → 安装新版 → 导入配置，即可完整迁移。
-
----
-
-## 📘 API 文档
-
-管理后台内置 **Swagger UI** 交互式 API 文档，访问：
-
-```
-http://your-server:5400/admin/api-docs
-```
-
-包含所有通知 API、管理 API 的完整接口定义、请求参数、响应示例。
-
----
-
-## 💾 数据持久化
-
-- 数据存储在 SQLite 数据库中，位于容器内 `/app/data/notifycenter.db`
-- 通过挂载 `./data:/app/data` 可以持久化数据
-- **升级版本时数据完全兼容**，只需替换镜像重启即可
-
-### 从旧版本升级
-
-1. 停止旧容器
-2. 备份 `data/notifycenter.db` 文件（推荐）
-3. 使用最新版本镜像创建新容器，挂载相同的 `data` 目录
-4. 数据库结构完全兼容，自动完成必要迁移
-
-> ✅ v0.70 为**无感升级**：不新增表、不新增列，所有新功能在已有 schema 上运行。回滚也无副作用。
+同版本小版本升级为无感升级，替换镜像重启即可。
 
 ---
 
 ## 🎯 典型应用场景
 
-| 场景 | 说明 |
-|------|------|
-| 📺 **Emby / Jellyfin 播放通知** | 家人开始观看/新入库剧集时推送到手机 |
-| 🗄️ **群晖 DSM 系统通知** | 群晖系统事件、备份任务、存储空间告警统一转发 |
-| 🖥️ **监控告警** | 服务器 CPU/内存告警推送到多个渠道 |
-| 🤖 **自动化脚本通知** | Python/Shell 脚本执行结果推送 |
-| 📦 **下载完成提醒** | qBittorrent/Aria2 下载完成通知 |
-| 🔒 **登录/安全告警** | 检测到异常登录立即推送 |
-| 📊 **日报/周报推送** | 定时任务生成的统计报告 |
+| 场景                          | 说明                       |
+| --------------------------- | ------------------------ |
+| 📺 **Emby / Jellyfin 播放通知** | 家人开始观看/新入库剧集时推送到手机       |
+| 🗄️ **群晖 DSM 系统通知**         | 群晖系统事件、备份任务、存储空间告警统一转发   |
+| 🖥️ **监控告警**                | 服务器 CPU/内存告警推送到多个渠道      |
+| 🤖 **自动化脚本通知**              | Python/Shell 脚本执行结果推送    |
+| 📦 **下载完成提醒**               | qBittorrent/Aria2 下载完成通知 |
+| 🔒 **登录/安全告警**              | 检测到异常登录立即推送              |
+| 📊 **日报/周报推送**              | 定时任务生成的统计报告              |
 
 ---
 
@@ -378,7 +228,7 @@ http://your-server:5400/admin/api-docs
 
 ### 忘记管理员密码？
 
-设置 `ADMIN_PASSWORD` 环境变量仅在用户表为空时生效。若已有用户，可删除 `data/notifycenter.db` 重新初始化（⚠️ 会丢失所有配置），或在容器内用 sqlite3 直接修改。
+`ADMIN_PASSWORD` 环境变量**只在首次初始化时生效**，之后改环境变量不会覆盖已有密码。若确实忘了：删掉 `data/` 里的数据库文件重新初始化（⚠️ **会丢失所有配置**，请先备份），或联系发布者协助重置。
 
 ### 如何测试渠道是否配置正确？
 
@@ -394,20 +244,35 @@ http://your-server:5400/admin/api-docs
 
 ---
 
-## 🛠️ 技术栈
-
-- **后端**：Go 1.21+ / Gin / GORM / SQLite
-- **模板引擎**：Pongo2（Jinja2 兼容）
-- **前端**：原生 HTML + Tailwind CSS + Vanilla JS
-- **容器**：Alpine Linux 精简镜像
-
----
-
 ## 📄 更新日志
 
-### v0.70（当前版本）
+### v1.0（当前版本）
+
+- 🔑 **授权体系（免费版 + 增强版 Pro）**：单镜像分发，通过离线签名授权码在运行时解锁增强功能，无需联网、不上报数据；「系统设置 → 授权」可查看本机机器码、粘贴授权码并查看授权详情
+- 🕸️ **关系图谱** *（Pro）*：可视化展示渠道 → 路由 → 模板 → API Key 的关联关系，配置多了也能一眼看清
+- 🛟 **渠道故障转移** *（Pro）*：路由可配置备用渠道，主渠道**全部**发送失败时按顺序自动接管，第一个成功即停止（主渠道有任一成功则不触发，避免重复推送）
+- 🔁 **通知重新发送** *（Pro）*：调用记录中一键重发失败/历史通知，排障不用再手工构造请求
+- 🔇 **Jellyfin 播放进度噪音过滤** *（Pro）*：自动忽略 `PlaybackProgress` 这类高频周期事件，避免消息轰炸
+- 📤 **送达保障** *（Pro）*：失败通知进入持久化队列，按退避策略自动重试（1m → 5m → 30m → 2h，间隔封顶），**重启不丢**；连续失败渠道自动熔断，超限转死信可一键人工重放
+- 🌙 **静默时段** *（Pro）*：配置免打扰时段（支持跨午夜，如 `23:00–07:00`），低于穿透优先级的消息**延迟到时段结束后补发**（不丢弃）；请求体新增可选 `priority` 字段（`urgent` / `normal` / `low`）
+- 📣 **消息升级与确认** *（Pro，默认关闭）*：为重要通知要求「已读确认」；超时未确认则先同渠道重推，再按配置顺序升级到更高优先级渠道；消息内附一键确认链接
+- 📥 **入站归档与重放** *（Pro，默认关闭）*：为第三方回调提供入站端点，**原样归档**请求（自动剔除 `Authorization` / `Cookie` 等敏感头），可一键**重放**到目标地址；令牌鉴权 + IP 限速 + 条数/天数保留策略
+- 🕘 **模板版本历史** *（Pro）*：模板保存即快照，可查看历史版本、按字段对比 **diff**（红绿行级）、一键**回滚**（回滚动作本身也会生成新版本，历史不丢）
+- 🧩 **扩展渠道包** *（Pro）*：新增 **ntfy / Gotify / Discord** 三种渠道类型（**v0.70 已有的 7 种渠道继续免费**，不受影响）
+- 📊 **监控指标** *（Pro）*：新增 Prometheus `/metrics` 端点，可接入 Grafana 做可视化与告警
+- 🧩 **剧集入库合并** *（Pro）*：Emby / Jellyfin 的整季批量入库通知按剧名聚合为一条，避免一次入库刷屏。未授权时按逐条发送（**不会丢通知**，仅不再聚合）；已配置的合并勾选状态会保留，激活后立即恢复
+- 🔐 **API Key 存储升级**：不再以明文保存，泄露风险大幅降低；跨实例迁移时 Key 保持不变
+- 🗑️ **1.0 从全新数据库起步**：通知日志与后台日志不迁移，配置通过 JSON 导入从 0.70 迁移
+- 🚀 **设置页新增「获取增强版」引导** *（仅免费版显示）*：三步引导（复制机器码 → 获取授权码 → 粘贴激活）
+- 🔒 **机器码改为与硬件绑定**：**升级镜像、重建容器都不会变码**；复制 `data/` 目录到另一台机器不再带走授权。授权页会显示当前机器码来源，⚠️ 机器码**刻意不支持用户自定义**
+- 🔎 **API 调用记录入口**：API Key 页新增「调用记录」按钮，直达该 Key 的全部历史调用（分页）；日志详情新增「原始请求 JSON」展示，支持提取变量、复制 JSON、一键生成通用模板
+- ⚙️ **设置页布局优化**：通知去重与配置导入/导出并排显示，界面更紧凑
+- 🔧 统一内置默认主模板为单一数据源，避免不同入口加载到不一致的默认内容
+
+### v0.70
+
 - 🎬 **Jellyfin 模板支持**：新增 Jellyfin 专用模板类型，自动识别播放/入库事件，完整变量与图片 URL 支持
-- 🔇 **通知去重/防轰炸**：基于 SHA256 的内容去重，可配置时间窗口与最大合并次数；配置持久化到数据库
+- 🔇 **通知去重/防轰炸**：相同内容在时间窗口内自动合并，可配置窗口与最大合并次数；重启后配置不丢失
 - 🧩 **剧集入库通知合并**：Emby / Jellyfin 的「新剧集入库」支持按剧名合并整季批量入库通知，合并窗口可调（10–300s），合并后提供 `EpisodeCount` / `EpisodeList` / `Episodes` 等变量
 - 📦 **配置导入/导出**：一键导出/导入渠道、模板、路由、API Key、系统配置，支持 skip/overwrite 两种模式
 - 📊 **仪表盘统计增强**：近 7 天发送趋势图、各渠道成功率统计、最近失败日志
@@ -422,11 +287,13 @@ http://your-server:5400/admin/api-docs
 - 🔧 修复 Pongo2 `{{ var or "默认值" }}` 渲染为 "True" 的兼容性问题
 
 ### v0.69
+
 - 🔁 渠道发送失败自动重试一次，缓解瞬时网络抖动
 - 🔐 Docker 启动自动识别弱 session key 并改用持久化随机密钥
 - 🛡️ 企业微信回调 URL 验证与消息接收均校验 ReceiverID
 
 ### v0.68
+
 - 🔐 API Key 哈希化、登录爆破防护、请求体大小限制
 - 🐳 Docker 镜像支持 amd64 + arm64 多架构
 - ⚡ 通知渠道并发发送
@@ -434,18 +301,38 @@ http://your-server:5400/admin/api-docs
 
 ### 更早版本
 
-请查看 [GitHub Releases](https://github.com/ttt216/notifycenter/releases)。
+请查看 [GitHub Releases](https://github.com/ttt216/NotifyCenter/releases)。
 
 ---
 
-## 📄 许可证
+## 📄 许可证与授权
 
-MIT License
+**分发方式**：v1.0 起**不提供源码**，仅以 Docker 镜像形式分发。授权条款见 [LICENSE](LICENSE)。
+
+**功能对比**：见上文「**免费版 vs 增强版**」。
+
+授权码是**离线签名令牌**，**无需联网即可校验，不上报任何数据**。获取后在「系统设置 → 授权」中粘贴即可，页面会显示本机机器码，用于把授权码绑定到你的实例。换设备、换机器可凭购买记录**免费换绑，每份授权最多 3 次**。
+
+---
+
+## 💬 交流群
+
+遇到问题想交流、想第一时间知道新功能？欢迎加入 QQ 群。
+
+<p align="center">  
+  <img src="https://github.com/user-attachments/assets/b184828d-969b-4224-82bd-e578476507be" width="200" alt="NotifyCenter 交流群二维码">  
+</p>
+
+<p align="center">
+  <strong>群名称</strong>：NotifyCenter 交流群　｜　<strong>群号</strong>：<code>1109380940</code>
+</p>
+
+> 💡 也可以直接在 QQ 里搜索群号加入。后台「系统设置 → 💬 加入交流群」里同样能看到这张二维码。
 
 ---
 
 ## 🙋 反馈与建议
 
-如果你在使用中遇到问题、有新功能建议或想贡献代码，欢迎提交 Issue 或 Pull Request。
+如果你在使用中遇到问题或有新功能建议，欢迎提交 Issue。
 
 **祝使用愉快！** 🎉
